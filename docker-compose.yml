@@ -1,0 +1,66 @@
+version: '3'
+
+volumes:
+  postgres_data:
+
+services:
+  django: &django
+    build:
+      context: ./backend
+      dockerfile: ./docker/Dockerfile
+    image: jewellery_django
+    container_name: jewellery_django
+    platform: linux/x86_64
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./backend:/src:z
+    env_file:
+      - ./.envs/local/django.env
+      - ./.envs/local/postgres.env
+    ports:
+      - "8000:8000"
+    command: /run_django.sh
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: jewellery_postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.envs/local/postgres.env
+
+  redis:
+    image: redis:7
+    container_name: jewellery_redis
+
+  celeryworker:
+    <<: *django
+    image: jewellery_celeryworker
+    container_name: jewellery_celeryworker
+    depends_on:
+      - redis
+      - postgres
+    ports: []
+    command: /run_celery_worker.sh
+
+  celerybeat:
+    <<: *django
+    image: jewellery_celerybeat
+    container_name: jewellery_celerybeat
+    depends_on:
+      - redis
+      - postgres
+    ports: []
+    command: /run_celery_beat.sh
+
+  flower:
+    <<: *django
+    image: jewellery_local_flower
+    container_name: jewellery_local_flower
+    depends_on:
+      - redis
+    ports:
+      - "5555:5555"
+    command: /run_celery_flower.sh
