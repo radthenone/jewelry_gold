@@ -76,6 +76,3 @@ profile = "black"
 skip = "venv/"
 skip_glob = "**/migrations/*.py"
 use_parentheses = true
-
-[tool.coverage.run]
-source = ["backend"]

@@ -130,4 +130,4 @@ dmypy.json
 
 #still in tests
 .pre-commit-config.yaml
-.github
+.github/*
