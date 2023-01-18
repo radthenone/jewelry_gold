@@ -26,7 +26,7 @@ RUN apt-get update \
     # cleaning cache
     && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* \
     #
-    && pip install "poetry==$POETRY_VERSION" && poetry --version
+    && pip install --no-cache-dir "poetry==$POETRY_VERSION" && poetry --version
 # build local
 ARG BUILD_ENVIRONMENT=local
 ARG APP_HOME=/src

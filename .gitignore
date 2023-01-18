@@ -127,7 +127,3 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
-#still in tests
-.pre-commit-config.yaml
-.github/*
